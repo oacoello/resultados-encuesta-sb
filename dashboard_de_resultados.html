@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados de Encuesta - UDH</title>
+    <!-- Tailwind CSS para el diseño visual -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js para gráficos interactivos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        customBg: '#fff7db',
+                        customTitle: '#2e5930',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Estilos personalizados para el scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fff7db;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2e5930;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-customBg text-black font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- HEADER CON IMAGEN Y TÍTULO OFICIAL -->
+    <header class="w-full bg-white border-b border-stone-200">
+        <!-- Imagen de Cabecera -->
+        <div class="w-full h-64 md:h-80 overflow-hidden relative">
+            <img 
+                src="banner.jpeg" 
+                alt="Cabecera HP-71B" 
+                class="w-full h-full object-cover object-center"
+                onerror="this.style.display='none'"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+        </div>
+        
+        <!-- Título Principal -->
+        <div class="max-w-5xl mx-auto px-6 py-8 text-center">
+            <h1 class="text-2xl md:text-3xl lg:text-4xl font-extrabold text-customTitle leading-tight tracking-normal">
+                Resultados de Encuesta: “Propuesta para la Adquisición del Reemplazo de la Computadora HP-71B por Tecnologías Digitales Modernas para Incrementar el Nivel Operativo del Arma de Artillería”
+            </h1>
+            <p class="text-sm text-stone-600 mt-3 font-semibold tracking-wide uppercase">
+                Muestra Total de la Investigación (N = 55)
+            </p>
+        </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL (FLUIDO Y SIN MENÚS) -->
+    <main class="flex-1 max-w-5xl w-full mx-auto px-4 md:px-6 py-8 flex flex-col gap-10">
+        
+        <!-- RESUMEN GENERAL -->
+        <section class="bg-white p-6 rounded-xl shadow-md border border-stone-200 flex flex-col gap-6">
+            <div class="border-b border-stone-200 pb-4">
+                <h2 class="text-xl md:text-2xl font-bold text-customTitle">Resumen Comparativo de Respuestas</h2>
+                <p class="text-sm text-stone-600 mt-1">Comparativa visual del nivel de acuerdo y desacuerdo consolidado para cada una de las 15 preguntas planteadas.</p>
+            </div>
+
+            <!-- Gráfico Comparativo General -->
+            <div class="border border-stone-100 rounded-lg p-4 bg-stone-50">
+                <h3 class="font-bold text-customTitle mb-4 flex items-center gap-2 text-sm uppercase tracking-wide">
+                    Distribución de Respuestas por Pregunta (Acuerdo vs Desacuerdo)
+                </h3>
+                <div class="relative w-full h-[450px]">
+                    <canvas id="chart-resumen-general"></canvas>
+                </div>
+            </div>
+
+            <!-- Tabla Matriz de Datos -->
+            <div class="border border-stone-200 rounded-lg overflow-hidden mt-2">
+                <div class="bg-stone-100 border-b border-stone-200 px-4 py-3">
+                    <span class="font-bold text-xs text-stone-700 uppercase tracking-wider">Matriz de Frecuencias y Porcentajes por Variable</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-stone-50 text-stone-700 font-bold border-b border-stone-200">
+                                <th class="p-3 w-12 text-center">ID</th>
+                                <th class="p-3">Variable de Medición</th>
+                                <th class="p-3 text-center bg-green-50/50 text-emerald-900">TA</th>
+                                <th class="p-3 text-center bg-green-50/50 text-emerald-900">A</th>
+                                <th class="p-3 text-center bg-stone-100 text-stone-800">I</th>
+                                <th class="p-3 text-center bg-red-50/50 text-rose-900">D</th>
+                                <th class="p-3 text-center bg-red-50/50 text-rose-900">TD</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-stone-100" id="tabla-resumen-cuerpo">
+                            <!-- Se inyecta dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE PREGUNTAS INDIVIDUALES (1 A 15) -->
+        <div class="flex flex-col gap-8" id="contenedor-preguntas-corridas">
+            <!-- Se inyectan dinámicamente las tarjetas de preguntas con gráficos y tablas -->
+        </div>
+
+    </main>
+
+    <!-- PIE DE PÁGINA INSTITUCIONAL CON EL LOGO DE LA UDH -->
+    <footer class="bg-white border-t border-stone-200 py-10 mt-12 text-center">
+        <div class="max-w-md mx-auto px-4 flex flex-col items-center gap-4">
+            <!-- Logo de la Universidad de Defensa de Honduras -->
+            <div class="w-32 h-32 md:w-40 md:h-40 flex items-center justify-center overflow-hidden mb-2">
+                <img 
+                    src="logoudh.png" 
+                    alt="Logo Universidad de Defensa de Honduras" 
+                    class="max-w-full max-h-full object-contain"
+                    onerror="this.style.display='none'"
+                />
+            </div>
+            <div class="text-stone-800 font-bold text-sm tracking-wide uppercase">
+                Universidad de Defensa de Honduras
+            </div>
+            <div class="text-stone-500 text-xs leading-relaxed max-w-sm">
+                Derechos Reservados © 2026. Este informe es de uso exclusivo para fines académicos y de investigación.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lógica de Control y Renderizado de Gráficos -->
+    <script>
+        // Datos de las 15 preguntas
+        const datosPreguntas = [
+            {
+                id: 1,
+                titulo: "Estado operativo de la HP-71B",
+                frecuencias: { TA: 9, A: 25, I: 7, D: 10, TD: 4 },
+                porcentajes: { TA: 16, A: 46, I: 13, D: 18, TD: 7 }
+            },
+            {
+                id: 2,
+                titulo: "Conocimiento de estudios previos de transición",
+                frecuencias: { TA: 8, A: 9, I: 11, D: 18, TD: 9 },
+                porcentajes: { TA: 15, A: 16, I: 20, D: 33, TD: 16 }
+            },
+            {
+                id: 3,
+                titulo: "Suficiencia de dotación actual de HP-71B",
+                frecuencias: { TA: 7, A: 4, I: 3, D: 18, TD: 23 },
+                porcentajes: { TA: 13, A: 7, I: 5, D: 33, TD: 42 }
+            },
+            {
+                id: 4,
+                titulo: "Imperativo de sustitución por tecnología digital",
+                frecuencias: { TA: 40, A: 11, I: 1, D: 1, TD: 2 },
+                porcentajes: { TA: 73, A: 20, I: 2, D: 2, TD: 3 }
+            },
+            {
+                id: 5,
+                titulo: "Implementación de software en dispositivos móviles",
+                frecuencias: { TA: 42, A: 11, I: 0, D: 1, TD: 1 },
+                porcentajes: { TA: 76, A: 20, I: 0, D: 2, TD: 2 }
+            },
+            {
+                id: 6,
+                titulo: "Viabilidad de modernización interna de la HP-71B",
+                frecuencias: { TA: 26, A: 11, I: 5, D: 9, TD: 4 },
+                porcentajes: { TA: 47, A: 20, I: 9, D: 17, TD: 7 }
+            },
+            {
+                id: 7,
+                titulo: "Integración de variables geográficas y topográficas",
+                frecuencias: { TA: 33, A: 19, I: 3, D: 0, TD: 0 },
+                porcentajes: { TA: 60, A: 35, I: 5, D: 0, TD: 0 }
+            },
+            {
+                id: 8,
+                titulo: "Reducción del tiempo entre detección y disparo",
+                frecuencias: { TA: 34, A: 19, I: 2, D: 0, TD: 0 },
+                porcentajes: { TA: 62, A: 34, I: 4, D: 0, TD: 0 }
+            },
+            {
+                id: 9,
+                titulo: "Protocolo de encriptación en el software balístico",
+                frecuencias: { TA: 32, A: 21, I: 2, D: 0, TD: 0 },
+                porcentajes: { TA: 58, A: 38, I: 4, D: 0, TD: 0 }
+            },
+            {
+                id: 10,
+                titulo: "Soberanía tecnológica sin dependencia externa",
+                frecuencias: { TA: 36, A: 17, I: 1, D: 0, TD: 1 },
+                porcentajes: { TA: 65, A: 31, I: 2, D: 0, TD: 2 }
+            },
+            {
+                id: 11,
+                titulo: "Interfaz intuitiva hombre-máquina",
+                frecuencias: { TA: 36, A: 16, I: 2, D: 1, TD: 0 },
+                porcentajes: { TA: 65, A: 29, I: 4, D: 2, TD: 0 }
+            },
+            {
+                id: 12,
+                titulo: "Portabilidad y autonomía energética",
+                frecuencias: { TA: 36, A: 18, I: 1, D: 0, TD: 0 },
+                porcentajes: { TA: 65, A: 33, I: 2, D: 0, TD: 0 }
+            },
+            {
+                id: 13,
+                titulo: "Capacidad de procesamiento y memoria",
+                frecuencias: { TA: 40, A: 14, I: 1, D: 0, TD: 0 },
+                porcentajes: { TA: 73, A: 25, I: 2, D: 0, TD: 0 }
+            },
+            {
+                id: 14,
+                titulo: "Migración hacia sistema operativo moderno",
+                frecuencias: { TA: 43, A: 11, I: 0, D: 1, TD: 0 },
+                porcentajes: { TA: 78, A: 20, I: 0, D: 2, TD: 0 }
+            },
+            {
+                id: 15,
+                titulo: "Importación y traducción de algoritmos originales",
+                frecuencias: { TA: 39, A: 16, I: 0, D: 0, TD: 0 },
+                porcentajes: { TA: 71, A: 29, I: 0, D: 0, TD: 0 }
+            }
+        ];
+
+        // Paleta de colores para gráficos de dona
+        // Acuerdos (Verdes oscuros), Neutrales (Gris medio), Desacuerdos (Rojos / Terracota)
+        const coloresGrafico = [
+            '#1b431c', // Totalmente de acuerdo
+            '#3c7d41', // De acuerdo
+            '#9ca3af', // Indiferente
+            '#c2410c', // En desacuerdo
+            '#7f1d1d'  // Totalmente en desacuerdo
+        ];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            construirTablaResumen();
+            inicializarGraficoResumen();
+            renderizarPreguntasCorridas();
+        });
+
+        // Construye la tabla matriz de resumen
+        function construirTablaResumen() {
+            const tbody = document.getElementById('tabla-resumen-cuerpo');
+            tbody.innerHTML = '';
+
+            datosPreguntas.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-stone-50 transition border-b border-stone-200";
+                tr.innerHTML = `
+                    <td class="p-3 font-bold text-stone-500 text-center">P${p.id}</td>
+                    <td class="p-3 font-semibold text-stone-900">${p.titulo}</td>
+                    <td class="p-3 text-center bg-green-50/20 text-emerald-900 font-bold">${p.porcentajes.TA}% <span class="text-[10px] text-stone-500 font-normal">(${p.frecuencias.TA})</span></td>
+                    <td class="p-3 text-center bg-green-50/20 text-emerald-900 font-bold">${p.porcentajes.A}% <span class="text-[10px] text-stone-500 font-normal">(${p.frecuencias.A})</span></td>
+                    <td class="p-3 text-center bg-stone-50 text-stone-800 font-semibold">${p.porcentajes.I}% <span class="text-[10px] text-stone-500 font-normal">(${p.frecuencias.I})</span></td>
+                    <td class="p-3 text-center bg-red-50/20 text-rose-900 font-bold">${p.porcentajes.D}% <span class="text-[10px] text-stone-500 font-normal">(${p.frecuencias.D})</span></td>
+                    <td class="p-3 text-center bg-red-50/20 text-rose-900 font-bold">${p.porcentajes.TD}% <span class="text-[10px] text-stone-500 font-normal">(${p.frecuencias.TD})</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Gráfico comparativo general (Superior)
+        function inicializarGraficoResumen() {
+            const ctx = document.getElementById('chart-resumen-general').getContext('2d');
+            
+            const labels = datosPreguntas.map(p => `P${p.id}`);
+            const dataAcuerdo = datosPreguntas.map(p => p.porcentajes.TA + p.porcentajes.A);
+            const dataDesacuerdo = datosPreguntas.map(p => p.porcentajes.D + p.porcentajes.TD);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Acuerdo Acumulado (TA + A) %',
+                            data: dataAcuerdo,
+                            backgroundColor: '#2e5930', // Verde corporativo
+                            borderRadius: 4,
+                            maxBarThickness: 20,
+                        },
+                        {
+                            label: 'Desacuerdo Acumulado (D + TD) %',
+                            data: dataDesacuerdo,
+                            backgroundColor: '#be123c', // Rojo oscuro
+                            borderRadius: 4,
+                            maxBarThickness: 20,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { 
+                                boxWidth: 12, 
+                                font: { size: 11, family: 'sans-serif', weight: 'bold' },
+                                color: '#000000'
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    const index = context[0].dataIndex;
+                                    return `Pregunta ${index+1}: ${datosPreguntas[index].titulo}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { 
+                            grid: { display: false },
+                            ticks: { color: '#000000', font: { weight: 'bold' } }
+                        },
+                        y: {
+                            min: 0,
+                            max: 100,
+                            ticks: { 
+                                color: '#000000',
+                                callback: value => value + '%' 
+                            },
+                            grid: { color: '#e5e7eb' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Renderizado corrido de las 15 tarjetas de preguntas
+        function renderizarPreguntasCorridas() {
+            const container = document.getElementById('contenedor-preguntas-corridas');
+            container.innerHTML = '';
+
+            datosPreguntas.forEach(p => {
+                const card = document.createElement('div');
+                card.id = `pregunta-card-${p.id}`;
+                card.className = "bg-white p-6 rounded-xl shadow-md border border-stone-200 flex flex-col gap-6";
+
+                card.innerHTML = `
+                    <!-- Encabezado de Pregunta -->
+                    <div class="border-b border-stone-100 pb-3">
+                        <div class="flex items-start gap-3">
+                            <span class="inline-flex items-center justify-center w-8 h-8 rounded bg-stone-100 text-customTitle font-bold text-sm border border-stone-200 shrink-0">
+                                P${p.id}
+                            </span>
+                            <h3 class="text-lg font-bold text-customTitle leading-tight pt-0.5">${p.titulo}</h3>
+                        </div>
+                    </div>
+
+                    <!-- Gráficos y Tablas -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        
+                        <!-- Visualización Gráfica -->
+                        <div class="border border-stone-100 rounded-lg p-4 flex flex-col items-center bg-stone-50/50">
+                            <h4 class="font-bold text-xs text-stone-500 uppercase tracking-wider mb-4">Estructura Porcentual</h4>
+                            <div class="relative w-full max-w-[220px] aspect-square">
+                                <canvas id="chart-canvas-${p.id}"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Distribución de Frecuencias -->
+                        <div class="border border-stone-200 rounded-lg overflow-hidden bg-white">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="bg-stone-50 text-stone-700 font-bold border-b border-stone-200">
+                                        <th class="p-3">Categoría de Respuesta</th>
+                                        <th class="p-3 text-right w-20">Frecuencia</th>
+                                        <th class="p-3 text-right w-20">Porcentaje</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-stone-100">
+                                    <tr class="hover:bg-stone-50">
+                                        <td class="p-3 flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-sm bg-[#1b431c] inline-block"></span> Totalmente de acuerdo</td>
+                                        <td class="p-3 text-right font-medium">${p.frecuencias.TA}</td>
+                                        <td class="p-3 text-right font-bold text-emerald-900 bg-green-50/20">${p.porcentajes.TA}%</td>
+                                    </tr>
+                                    <tr class="hover:bg-stone-50">
+                                        <td class="p-3 flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-sm bg-[#3c7d41] inline-block"></span> De acuerdo</td>
+                                        <td class="p-3 text-right font-medium">${p.frecuencias.A}</td>
+                                        <td class="p-3 text-right font-bold text-emerald-900 bg-green-50/20">${p.porcentajes.A}%</td>
+                                    </tr>
+                                    <tr class="hover:bg-stone-50">
+                                        <td class="p-3 flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-sm bg-[#9ca3af] inline-block"></span> Indiferente</td>
+                                        <td class="p-3 text-right font-medium">${p.frecuencias.I}</td>
+                                        <td class="p-3 text-right font-bold text-stone-700 bg-stone-50">${p.porcentajes.I}%</td>
+                                    </tr>
+                                    <tr class="hover:bg-stone-50">
+                                        <td class="p-3 flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-sm bg-[#c2410c] inline-block"></span> En desacuerdo</td>
+                                        <td class="p-3 text-right font-medium">${p.frecuencias.D}</td>
+                                        <td class="p-3 text-right font-bold text-rose-900 bg-red-50/20">${p.porcentajes.D}%</td>
+                                    </tr>
+                                    <tr class="hover:bg-stone-50">
+                                        <td class="p-3 flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-sm bg-[#7f1d1d] inline-block"></span> Totalmente en desacuerdo</td>
+                                        <td class="p-3 text-right font-medium">${p.frecuencias.TD}</td>
+                                        <td class="p-3 text-right font-bold text-rose-900 bg-red-50/20">${p.porcentajes.TD}%</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr class="bg-stone-50 font-bold border-t border-stone-200 text-stone-800">
+                                        <td class="p-3">Total Muestral</td>
+                                        <td class="p-3 text-right">55</td>
+                                        <td class="p-3 text-right">100%</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                    </div>
+                `;
+
+                container.appendChild(card);
+                inicializarGraficoDona(p);
+            });
+        }
+
+        // Gráfico de tipo Dona individual
+        function inicializarGraficoDona(p) {
+            const canvasEl = document.getElementById(`chart-canvas-${p.id}`);
+            if (!canvasEl) return;
+
+            const ctx = canvasEl.getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Totalmente de acuerdo', 'De acuerdo', 'Indiferente', 'En desacuerdo', 'Totalmente en desacuerdo'],
+                    datasets: [{
+                        data: [
+                            p.porcentajes.TA, 
+                            p.porcentajes.A, 
+                            p.porcentajes.I, 
+                            p.porcentajes.D, 
+                            p.porcentajes.TD
+                        ],
+                        backgroundColor: coloresGrafico,
+                        borderWidth: 1,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false // Oculto para evitar saturación visual; los datos se representan en la tabla
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.label}: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+    </script>
+</body>
+</html>
